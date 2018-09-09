@@ -1,24 +1,43 @@
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
+const utils = require('./utils');
 
 const RPC_HOST = 'localhost:28888';
 const PROTO_PATH = '../proto/eventstore.subscription.proto';
 const StreamStore = require('./classes').StreamStore;
 const streamStore = new StreamStore();
 
+const log = console.log;
+
 const getEvents = (call, callback) => {
-  callback(null, streamStore.getStream(call.request.streamId))
+  callback(null, streamStore.getStreamEvents(call.request.streamId))
 };
 
 const setEvents = (call, callback) => {
-  // console.log(JSON.stringify(call.request, null, 2));
   const { streamId, events } = call.request;
   callback(null, streamStore.write(streamId, events));
+};
+
+const subscribe = (call, callback) => {
+  const { projection } = call.request;
+  log('[Subscriber]', projection);
+
+  const subscriberId = call.metadata.getMap()['client'];
+  call.on('cancelled', () => {
+    streamStore.unsubscribe(subscriberId);
+  });
+
+  streamStore
+    .createProjection(projection, subscriberId)
+    .onValue((events) => {
+      call.write({ events });
+  });
 };
 
 const handlers = {
   getEvents,
   setEvents,
+  subscribe
 };
 
 function main(root) {
@@ -27,6 +46,7 @@ function main(root) {
   const credentials = grpc.ServerCredentials.createInsecure();
   server.bind(RPC_HOST, credentials);
   server.start();
+  log('[RPC server initialised]');
 }
 
 //preparing network i/o

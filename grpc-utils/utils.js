@@ -1,7 +1,4 @@
 function toJSONBytes(obj) {
-  if (Array.isArray(obj)) {
-    return obj = obj.map(o => Buffer.from(JSON.stringify(obj)));
-  }
   const str = JSON.stringify(obj);
   return Buffer.from(str);
 }
