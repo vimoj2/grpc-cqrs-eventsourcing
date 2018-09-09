@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+<form action="/post" method="post" id="my_form">
+    <label>StreamId</label>
+    <input type="text" name="streamId"/><br>
+    <label>EventName</label>
+    <input type="text" name="eventType"/><br>
+    <label>EventBody</label>
+    <textarea name="eventBody"></textarea><br>
+    <input type="submit" name="submit" value="Submit Form"/>
+    <div id="server-results"><!-- For server results --></div>
+</form>
+<script>
+  $( document ).ready(function() {
+      $("#my_form").submit(function (event) {
+        event.preventDefault(); //prevent default action
+        var post_url = $(this).attr("action"); //get form action url
+        var form_data = $(this).serialize(); //Encode form elements for submission
+
+        $.ajax({
+          url: '/post',
+          type: 'POST',
+          data: form_data
+        });
+      });
+   })
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package zoover;
+
+service Eventstore {
+    rpc GetEvents (GetEventsRequest) returns (GetEventsResponse) {}
+    rpc SetEvents (SetEventsRequest) returns (SetEventsResponse) {}
+}
+
+message EventBody {
+
+}
+message Event {
+    string eventType = 1;
+    bytes eventBody = 2;
+    string eventTimestamp = 3;
+}
+
+message SetEventsRequest {
+    string streamId = 1;
+    repeated Event events = 2;
+}
+
+message SetEventsResponse {
+}
+
+message GetEventsRequest {
+    string streamId = 1;
+}
+
+message GetEventsResponse {
+    repeated Event events = 1;
+}
