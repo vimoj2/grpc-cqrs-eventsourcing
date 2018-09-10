@@ -12,6 +12,14 @@ module.exports = class HttpClient {
     this.app.use(bodyParser.urlencoded({extended: true}));
   }
   init() {
+    this.app.get('/stream/info', (req, res) => {
+      this.client.getInfo({}, (error, result) => {
+        if (error) 
+          res.status(500).end();
+        else 
+          res.json(result);
+      })
+    });
     this.app.get('/stream/:streamId', (req, res) => {
       this.client.getEvents({ streamId: req.params.streamId }, (error, result) => {
         result.events.map(event => {
@@ -20,7 +28,6 @@ module.exports = class HttpClient {
         res.json(result);
       })
     });
-
     this.app.post('/post', (req, res) => {
       const { streamId, eventType, eventBody } = req.body;
       const body = {

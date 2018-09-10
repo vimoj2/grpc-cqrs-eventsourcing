@@ -21,7 +21,8 @@ module.exports = class Stream extends EventEmitter {
   }
   setPublished(bool) {
   	log(`[Stream ${this.streamId} status changed to ${bool}]`);
-  	this.isPublished = bool;
+    this.removeAllListeners('write');
+    this.isPublished = bool;
   }
   lock() {
     if (this.isLocked) {

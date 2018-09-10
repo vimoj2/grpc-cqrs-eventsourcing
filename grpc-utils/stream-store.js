@@ -1,8 +1,6 @@
 const Kefir = require('kefir');
 const EventEmitter = require('events').EventEmitter;
 const Stream = require('./stream');
-const utils = require('./utils');
-
 
 const log = console.log;
 
@@ -12,6 +10,12 @@ class StreamStore {
     this.subscribers = {};
     this.rootStream = null;
     log('[Stream store initialized]')
+  }
+  getInfo() {
+    return {
+      streams: Object.keys(this.streams).length,
+      subscribers: Object.keys(this.subscribers)
+    }
   }
   intRootStream() {
     if (!this.emitter) {
@@ -34,7 +38,7 @@ class StreamStore {
       if (Object.keys(this.subscribers).length) {
         this.addConsumer(streamId, this._handler.bind(this));
       }
-      log(`Stream store registered stream ${streamId}`);
+      log(`[Stream store registered stream ${streamId}]`);
     }
     return this.streams[streamId];
   }
@@ -60,9 +64,9 @@ class StreamStore {
       if (subscriber === activeSubscriber) {
         continue;
       }
-      // if (Object.values(events).every(event => event === adding)) {
-      //   continue;
-      // }
+      if (Object.values(events).every(Boolean)) {
+        break;
+      }
 
       for (let type of projection.split(',')) {
         if (Object.keys(events).includes(type)) {
@@ -88,7 +92,6 @@ class StreamStore {
         const stream = this.getStream(streamId);
         for (let type of stream.eventTypes) {
           if (events.includes(type)) {
-            stream.removeAllListeners('write');
             stream.setPublished(false);
             break;
           }
@@ -125,8 +128,6 @@ class StreamStore {
       return e.filter(e => projection.split(',').includes(e.eventType)).length
     });
   }
-}
-
-module.exports = {
-  StreamStore
 };
+
+module.exports.StreamStore = StreamStore;

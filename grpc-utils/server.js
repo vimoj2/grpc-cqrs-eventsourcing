@@ -4,7 +4,7 @@ const utils = require('./utils');
 
 const RPC_HOST = 'localhost:28888';
 const PROTO_PATH = '../proto/eventstore.subscription.proto';
-const StreamStore = require('./classes').StreamStore;
+const StreamStore = require('./stream-store').StreamStore;
 const streamStore = new StreamStore();
 
 const log = console.log;
@@ -34,10 +34,15 @@ const subscribe = (call, callback) => {
   });
 };
 
+const getInfo = (call, callback) => {
+  callback(null, streamStore.getInfo());
+};
+
 const handlers = {
   getEvents,
   setEvents,
-  subscribe
+  subscribe,
+  getInfo
 };
 
 function main(root) {
