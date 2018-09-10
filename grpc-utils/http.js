@@ -14,18 +14,23 @@ module.exports = class HttpClient {
   init() {
     this.app.get('/stream/info', (req, res) => {
       this.client.getInfo({}, (error, result) => {
-        if (error) 
+        if (error)
           res.status(500).end();
-        else 
+        else
           res.json(result);
       })
     });
     this.app.get('/stream/:streamId', (req, res) => {
-      this.client.getEvents({ streamId: req.params.streamId }, (error, result) => {
-        result.events.map(event => {
+      const { streamId } = req.params;
+      this.client.getEvents({ streamId }, (error, result) => {
+        if (!result.events) {
+          res.status(404).end();
+          return;
+        }
+        result.events.forEech(event => {
           event.eventBody = utils.deserialize(event.eventBody);
         });
-        res.json(result);
+        return result;
       })
     });
     this.app.post('/post', (req, res) => {

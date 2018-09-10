@@ -26,7 +26,7 @@ class StreamStore {
     }
     return this.rootStream;
   }
-  _handler(events) {
+  addHandler(events) {
     this.emitter.emit(events);
   }
   addConsumer(streamId, handler = () => {}) {
@@ -36,7 +36,7 @@ class StreamStore {
     if (!this.streams[streamId]) {
       this.streams[streamId] = new Stream(streamId);
       if (Object.keys(this.subscribers).length) {
-        this.addConsumer(streamId, this._handler.bind(this));
+        this.addConsumer(streamId, this.addHandler.bind(this));
       }
       log(`[Stream store registered stream ${streamId}]`);
     }
@@ -113,7 +113,7 @@ class StreamStore {
         if (!stream.isPublished && stream.eventTypes.includes(type)) {
           const stream = this.getStream(streamId);
           stream.setPublished(true);
-          stream.addListener('write', this._handler.bind(this));
+          stream.addListener('write', this.addHandler.bind(this));
           break;
         }
       }
@@ -128,6 +128,6 @@ class StreamStore {
       return e.filter(e => projection.split(',').includes(e.eventType)).length
     });
   }
-};
+}
 
 module.exports.StreamStore = StreamStore;

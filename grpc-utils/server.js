@@ -57,7 +57,7 @@ function main(root) {
 //preparing network i/o
 protoLoader
   .load(PROTO_PATH)
-  .then(packageDefinition => {
-    return grpc.loadPackageDefinition(packageDefinition).zoover;
-  })
+  .then(packageDefinition => (
+    grpc.loadPackageDefinition(packageDefinition).zoover
+  ))
   .then(main);

@@ -5,7 +5,7 @@ const utils = require('./utils');
 
 const log = console.log;
 
-module.exports = class Stream extends EventEmitter {
+class Stream extends EventEmitter {
   constructor(streamId) {
     super();
     this.eventTypes = [];
@@ -53,4 +53,6 @@ module.exports = class Stream extends EventEmitter {
   getEvents() {
     return this.events;
   }
-};
+}
+
+module.exports.Stream = Stream;
