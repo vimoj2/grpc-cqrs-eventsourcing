@@ -1,9 +1,9 @@
 const http = require('http');
 const uuid = require('uuid');
 
-const Aggregate = require('../../cqrs/Aggregate');
-const Command = require('../../cqrs/Command');
-const EventstoreClient = require('../../eventsourcing/EventstoreClient');
+const Aggregate = require('../../libs/cqrs/Aggregate');
+const Command = require('../../libs/cqrs/Command');
+const EventstoreClient = require('../../libs/eventsourcing/EventstoreClient');
 
 const eventstore = new EventstoreClient();
 const aggregate = new Aggregate(eventstore);

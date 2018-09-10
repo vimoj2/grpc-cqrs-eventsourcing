@@ -1,6 +1,6 @@
 const Kefir = require('kefir');
 const EventEmitter = require('events').EventEmitter;
-const utils = require('serializer');
+const utils = require('tools/serializer/index');
 
 
 const log = console.log;

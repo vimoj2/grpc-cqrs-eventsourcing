@@ -1,8 +1,7 @@
-FROM node:alpine
+FROM cqrs-eventsourcing_libs
 
 WORKDIR /app
 COPY . .
-
 RUN npm install
-
-CMD ["node EventStore"]
+RUN ls /libs
+CMD ["node", "index"]
