@@ -7,7 +7,7 @@ module.exports = class HttpClient {
   constructor(options) {
     this.client = options.client;
     this.app = express();
-    this.app.use(express.static('../assets'));
+    this.app.use(express.static('./assets'));
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({extended: true}));
   }

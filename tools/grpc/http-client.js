@@ -2,7 +2,7 @@ const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 
 const HttpServer = require('./http');
-const PROTO_PATH = '../proto/eventstore.subscription.proto';
+const PROTO_PATH = '../../proto/eventstore.proto';
 
 function main(service) {
   const client = new service.Eventstore('localhost:28888', grpc.credentials.createInsecure());

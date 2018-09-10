@@ -1,6 +1,6 @@
 const Kefir = require('kefir');
 const EventEmitter = require('events').EventEmitter;
-const Stream = require('./stream');
+const Stream = require('./Stream').Stream;
 
 const log = console.log;
 

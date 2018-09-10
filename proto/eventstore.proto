@@ -1,36 +1,50 @@
 syntax = "proto3";
 
-option java_multiple_files = true;
-option java_package = "io.eventstore";
-option java_outer_classname = "EventstoreProto";
-option objc_class_prefix = "ES";
-
 package zoover;
 
-
 service Eventstore {
-  rpc GetEvents (EventsRequest) returns (EventsReply) {}
-  rpc SetEvent(SetEventRequest) returns (SetEventResponse) {}
-}
-
-message SetEventResponse {
-
-}
-
-message SetEventRequest {
-  Event event = 1;
-}
-
-message EventsRequest {
-  string streamId = 1;
+  rpc GetEvents (GetEventsRequest) returns (GetEventsResponse) {}
+  rpc SetEvents (SetEventsRequest) returns (SetEventsResponse) {}
+  rpc Subscribe (SubsribeRequest) returns (stream SubscribeResponse) {};
+  rpc GetInfo(GetInfoRequest) returns (GetInfoResponse) {};
 }
 
 message Event {
-  string eventId = 1;
-  string eventType = 2;
-  int64 eventTimestamp = 3;
+  string eventType = 1;
+  bytes eventBody = 2;
+  string eventTimestamp = 3;
 }
 
-message EventsReply {
+message GetEventsRequest {
+  string streamId = 1;
+}
+
+message GetEventsResponse {
   repeated Event events = 1;
+}
+
+message SetEventsRequest {
+  string streamId = 1;
+  repeated Event events = 2;
+}
+
+message SetEventsResponse {
+
+}
+
+message SubsribeRequest {
+  string projection = 1;
+}
+
+message SubscribeResponse {
+  repeated Event events = 1;
+}
+
+message GetInfoRequest {
+
+}
+
+message GetInfoResponse {
+  int32 streams = 1;
+  repeated string subscribers = 2;
 }

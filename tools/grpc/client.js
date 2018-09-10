@@ -1,11 +1,11 @@
 const uuid = require('uuid');
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
-const {serialize} = require('./utils');
+const {serialize} = require('serializer');
 
 const D_TIMEOUT = 1000;
 const RPC_SERVER = 'localhost:28888';
-const PROTO_PATH = '../proto/eventstore.subscription.proto';
+const PROTO_PATH = '../../proto/eventstore.proto';
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 const zoover = grpc.loadPackageDefinition(packageDefinition).zoover;

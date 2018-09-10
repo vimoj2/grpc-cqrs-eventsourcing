@@ -1,10 +1,10 @@
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
-const utils = require('./utils');
+const utils = require('serializer');
 
 const RPC_HOST = 'localhost:28888';
-const PROTO_PATH = '../proto/eventstore.subscription.proto';
-const StreamStore = require('./stream-store').StreamStore;
+const PROTO_PATH = '../proto/eventstore.proto';
+const StreamStore = require('./StreamStore').StreamStore;
 const streamStore = new StreamStore();
 
 const log = console.log;
@@ -31,7 +31,7 @@ const subscribe = (call, callback) => {
     .createProjection(projection, subscriberId)
     .onValue((events) => {
       call.write({ events });
-  });
+    });
 };
 
 const getInfo = (call, callback) => {
