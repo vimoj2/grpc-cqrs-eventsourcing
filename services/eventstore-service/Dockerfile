@@ -1,7 +1,7 @@
-FROM cqrs-eventsourcing_libs
+FROM cqrs-es_libs
 
 WORKDIR /app
 COPY . .
-RUN npm install
-RUN ls /libs
+
+RUN npm install --unsafe-perm
 CMD ["node", "index"]

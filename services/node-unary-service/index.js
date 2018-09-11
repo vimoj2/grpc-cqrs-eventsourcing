@@ -1,34 +1,49 @@
-const http = require('http');
-const uuid = require('uuid');
+const grpc = require('grpc');
+const protoLoader = require('@grpc/proto-loader');
+const { deserialize } = require('serializer');
 
-const Aggregate = require('../../libs/cqrs/Aggregate');
-const Command = require('../../libs/cqrs/Command');
-const EventstoreClient = require('../../libs/eventsourcing/EventstoreClient');
+const log = console.log;
+const RPC_SERVER = 'eventstore:28888';
+const PROTO_PATH = './proto/eventstore.proto';
 
-const eventstore = new EventstoreClient();
-const aggregate = new Aggregate(eventstore);
+const packageDefinition = protoLoader.loadSync(PROTO_PATH);
+const zoover = grpc.loadPackageDefinition(packageDefinition).zoover;
 
-const createHandler = (params) => {
-  params.uuid = uuid();
-  const commandParams = {
-    name: 'CREATE_USER',
-    params
-  };
-  const createCommand = new Command(commandParams);
-  // We need response!!!
-  aggregate.execute(createCommand);
-};
+const eventTypes = process.argv[2] || 'user_created' ||  die(new Error('Pass projection! For now it is string divided by comma'));
 
-http.createServer((req, res) => {
-  if (req.url === '/favicon.ico') res.end();
-  else {
-    createHandler({
-      username: 'iamser'
+const meta = new grpc.Metadata();
+meta.add('client', `service-${new Date().getTime()}`);
+
+function main() {
+  const client = new zoover.Eventstore(RPC_SERVER, grpc.credentials.createInsecure());
+
+  const call = client.subscribe({ projection: eventTypes }, meta);
+  call.on('data', (data) => {
+    data.events.forEach((event) => {
+      console.log('[Got]',
+        event.eventType,
+        JSON.stringify(deserialize(event.eventBody), null, 2),
+        event.eventTimestamp
+      )
     });
-    res.end();
-  }
-}).listen(28888);
+  });
+  call.on('end', function() {
+    log('[CALL END]')
+    // The server has finished sending
+  });
+  call.on('error', function(e) {
+    log(e);
+    // An error has occurred and the stream has been closed.
+  });
+  call.on('status', function(status) {
+    log(status);
+    // process status
+  });
+}
 
+function die(error) {
+  console.error(error.stack);
+  process.exit(-1);
+}
 
-
-
+main();

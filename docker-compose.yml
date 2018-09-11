@@ -2,4 +2,16 @@ version: "2"
 
 services:
   libs:
-    build: ./libs
+    build: services/libs
+  eventstore:
+    build: services/eventstore-service
+    ports:
+      - 28888:28888
+  unary:
+    build: services/node-unary-service
+    links:
+      - eventstore
+  server-stream:
+    build: services/node-server-streaming-service
+    links:
+    - eventstore

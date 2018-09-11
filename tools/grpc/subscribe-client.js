@@ -18,6 +18,10 @@ function main() {
   const client = new zoover.Eventstore(RPC_SERVER, grpc.credentials.createInsecure());
 
   const call = client.subscribe({ projection: eventTypes }, meta);
+  call.on('error', function(e) {
+    log(e);
+    // An error has occurred and the stream has been closed.
+  });
   call.on('data', (data) => {
     data.events.forEach((event) => {
       console.log('[Got]',
@@ -27,17 +31,13 @@ function main() {
       )
     });
   });
-  call.on('end', function() {
-    log('[CALL END]')
-    // The server has finished sending
-  });
-  call.on('error', function(e) {
-    log(e);
-    // An error has occurred and the stream has been closed.
-  });
   call.on('status', function(status) {
     log(status);
     // process status
+  });
+  call.on('end', function() {
+    log('[CALL END]')
+    // The server has finished sending
   });
 }
 
