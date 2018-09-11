@@ -1,0 +1,19 @@
+{
+  "name": "node-server-streaming-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@grpc/proto-loader": "^0.3.0",
+    "google-proto-files": "^0.16.1",
+    "grpc": "^1.14.1",
+    "uuid": "3.3.2",
+    "serializer": "file:../libs/serializer"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

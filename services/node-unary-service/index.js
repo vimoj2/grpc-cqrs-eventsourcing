@@ -3,8 +3,8 @@ const protoLoader = require('@grpc/proto-loader');
 const { deserialize } = require('serializer');
 
 const log = console.log;
-const RPC_SERVER = 'localhost:28888';
-const PROTO_PATH = '../../proto/eventstore.proto';
+const RPC_SERVER = 'eventstore:28888';
+const PROTO_PATH = './proto/eventstore.proto';
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 const zoover = grpc.loadPackageDefinition(packageDefinition).zoover;
@@ -18,10 +18,6 @@ function main() {
   const client = new zoover.Eventstore(RPC_SERVER, grpc.credentials.createInsecure());
 
   const call = client.subscribe({ projection: eventTypes }, meta);
-  call.on('error', function(e) {
-    log(e);
-    // An error has occurred and the stream has been closed.
-  });
   call.on('data', (data) => {
     data.events.forEach((event) => {
       console.log('[Got]',
@@ -31,13 +27,17 @@ function main() {
       )
     });
   });
-  call.on('status', function(status) {
-    log(status);
-    // process status
-  });
   call.on('end', function() {
     log('[CALL END]')
     // The server has finished sending
+  });
+  call.on('error', function(e) {
+    log(e);
+    // An error has occurred and the stream has been closed.
+  });
+  call.on('status', function(status) {
+    log(status);
+    // process status
   });
 }
 

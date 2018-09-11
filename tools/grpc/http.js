@@ -33,7 +33,7 @@ module.exports = class HttpClient {
         return result;
       })
     });
-    this.app.post('/post', (req, res) => {
+    this.app.post('/stream', (req, res) => {
       const { streamId, eventType, eventBody } = req.body;
       const body = {
         streamId,
