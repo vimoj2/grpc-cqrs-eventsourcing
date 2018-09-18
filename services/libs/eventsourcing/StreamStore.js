@@ -111,7 +111,6 @@ class StreamStore {
       const stream = this.getStream(streamId);
       for (let type of eventTypes) {
         if (!stream.isPublished && stream.eventTypes.includes(type)) {
-          const stream = this.getStream(streamId);
           stream.setPublished(true);
           stream.addListener('write', this.addHandler.bind(this));
           break;

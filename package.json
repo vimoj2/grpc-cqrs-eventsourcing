@@ -11,7 +11,8 @@
     "build:unary": "docker-compose -p cqrs-es build unary",
     "build:server-stream": "docker-compose -p cqrs-es build server-stream",
     "start": "docker-compose -p cqrs-es up -d",
-    "stop": "docker-compose -p cqrs-es stop"
+    "stop": "docker-compose -p cqrs-es stop",
+    "logs": "docker-compose -p cqrs-es logs -f"
   },
   "repository": {
     "type": "git",

@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require("body-parser");
+const utils = require('serializer');
 
-const utils = require('./utils');
+const HTTP_PORT = 8888;
 
 module.exports = class HttpClient {
   constructor(options) {
@@ -52,9 +53,8 @@ module.exports = class HttpClient {
     });
   }
   start() {
-    this.app.listen(8888,() => {
-      console.log("Server Started and Running ...");
-    });
+    this.app.listen(HTTP_PORT)
+    console.log(`Server Started and Running [http://localhost:${HTTP_PORT}]`);
   }
 };
 
