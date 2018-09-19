@@ -1,0 +1,18 @@
+{
+  "name": "cqrs",
+  "version": "1.0.0",
+  "description": "",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec --ui bdd test/*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mocha": "5.2.0",
+    "serializer": "file:../serializer"
+  }
+}
