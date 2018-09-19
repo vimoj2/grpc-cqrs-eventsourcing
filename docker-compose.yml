@@ -7,6 +7,7 @@ services:
     build: services/eventstore-service
     ports:
       - 28888:28888
+    restart: always
   unary:
     build: services/node-unary-service
     links:

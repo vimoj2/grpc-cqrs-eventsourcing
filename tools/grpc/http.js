@@ -28,10 +28,10 @@ module.exports = class HttpClient {
           res.status(404).end();
           return;
         }
-        result.events.forEech(event => {
+        result.events.forEach(event => {
           event.eventBody = utils.deserialize(event.eventBody);
         });
-        return result;
+        res.json(result);
       })
     });
     this.app.post('/stream', (req, res) => {

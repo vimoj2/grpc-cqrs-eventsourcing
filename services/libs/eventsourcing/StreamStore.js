@@ -13,7 +13,8 @@ class StreamStore {
   }
   getInfo() {
     return {
-      streams: Object.keys(this.streams).length,
+      streamsNumber: Object.keys(this.streams).length,
+      streamsNames: Object.keys(this.streams),
       subscribers: Object.keys(this.subscribers)
     }
   }
