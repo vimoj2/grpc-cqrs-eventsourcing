@@ -43,7 +43,8 @@ function * main() {
   registry.eventstoreClient = new EventStoreClient(grpcClient);
 
   const projectionSettings = {
-    projection: config.projection
+    projection: config.projection,
+    stateful: true
   };
 
   const projections = yield readdir(path.resolve(__dirname, './components/projections')).then(filterByExt('.js'));

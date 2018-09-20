@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const async = require('async');
 const Promise = require('bluebird');
-const { deserialize, serialize } = require('serializer');
+const { deserialize } = require('serializer');
 
 const formatEvents = (data, formatter) => data.events.map(event => {
   return {
@@ -27,12 +27,13 @@ class EventHandler {
         process.exit(-1);
       }
     };
-
     projections = Array.isArray(projections) ? projections : [projections];
     this.events = _.assign.apply(_, [{}].concat(_.map(projections, 'events'))) || {};
     this.views = _.assign.apply(_, [{}].concat(_.map(projections, 'views'))) || {};
 
     this.options = _.defaults(options, defaultOptions);
+
+    this.initState();
 
     const setupSubscriber = () => {
       if (

@@ -4,7 +4,7 @@ module.exports = (registry) => {
   return {
     create(req, res) {
       const data = req.body;
-      data.uid = uuid();
+
       const command = {
         commandType: 'CreateUser',
         commandData: data,

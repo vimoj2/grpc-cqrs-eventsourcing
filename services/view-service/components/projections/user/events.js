@@ -1,10 +1,14 @@
 module.exports = () => {
   const events = {
     ['UserCreated'](event) {
-      console.log(event)
+      if (this.state.users)
+        this.state.users[`${event.uid}`] = event;
+      else
+        this.state.users = { [`${event.uid}`]: event };
     },
     ['UserUpdated'](event) {
-      console.log(event)
+      if (this.get('users')[event.uid])
+        Object.assign(this.get('users')[event.uid], event);
     }
   };
   return { events };

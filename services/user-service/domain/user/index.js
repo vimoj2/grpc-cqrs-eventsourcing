@@ -2,14 +2,15 @@ const uuid = require('uuid');
 
 class User {
   constructor(uid) {
-    this.entityName = uid ? `user-${uid}`: `user-${uuid()}`;
+    this.uid = uid || (uid = uuid());
+    this.entityName = `user-${this.uid}`;
   }
   processCreateUser(command) {
     const events = [
       {
         eventType: 'UserCreated',
         eventBody: {
-          ...command.commandData,
+          ...command.commandData, ...{ uid: this.uid },
           timestamp: command.commandTimestamp
         },
         eventTimestamp: command.commandTimestamp
@@ -31,13 +32,11 @@ class User {
     return events;
   }
   applyUserCreated(event) {
-    console.log('applyCreateEvent()');
     const { eventBody: { timestamp } } = event;
     this.timestamp = timestamp;
     return this;
   }
   applyUserUpdated(event) {
-    console.log('applyUserUpdated()');
     const { eventBody: { timestamp } } = event;
     this.timestamp = timestamp;
     return this;
