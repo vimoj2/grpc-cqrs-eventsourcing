@@ -4,11 +4,9 @@
   "description": "hal response formatter",
   "main": "index.js",
   "repository": {
-    "type": "git",
-    "url": "git+ssh://git@bitbucket.org/leantegra-repo/jslibs.git"
+    "type": "git"
   },
   "license": "ISC",
-  "homepage": "https://bitbucket.org/leantegra-repo/jslibs#readme",
   "dependencies": {
     "lodash": "^3.10.1"
   }
