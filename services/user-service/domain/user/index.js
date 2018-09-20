@@ -2,7 +2,7 @@ const uuid = require('uuid');
 
 class User {
   constructor(uid) {
-    this.uid = uid || (uid = uuid());
+    this.uid = (uid || uuid());
     this.entityName = `user-${this.uid}`;
   }
   processCreateUser(command) {
