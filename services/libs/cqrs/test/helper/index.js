@@ -11,7 +11,7 @@ const PROTO_PATH = './proto/eventstore.proto';
 const packageDefinition = protoLoader.loadSync(path.resolve(__dirname, PROTO_PATH));
 const zoover = grpc.loadPackageDefinition(packageDefinition).zoover;
 
-module.exports.client = new zoover.Eventstore(RPC_SERVER, grpc.credentials.createInsecure());;
+module.exports.client = new zoover.Eventstore(RPC_SERVER, grpc.credentials.createInsecure());
 
 module.exports.makeEvents = (eventType) => [{
   eventType,

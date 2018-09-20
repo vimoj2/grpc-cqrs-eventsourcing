@@ -29,4 +29,4 @@ const triggerUpdateBusinessLogic = (data) => {
 
 // Trigger business logic
 triggerCreateBusinessLogic({ username: 'vimoj2' });
-triggerUpdateBusinessLogic({ uid: '1f94aca3-fa87-48d5-beb2-dd1234c34563', username: 'vimoj2' });
+triggerUpdateBusinessLogic({ uid: '1f94aca3-fa87-48d5-beb2-dd1234c34563', email: 'eugene@mail.com' });

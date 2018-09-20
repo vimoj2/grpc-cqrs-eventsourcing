@@ -27,14 +27,11 @@ class AggregateRepository {
 
     return this.loadEvents(entityName)
       .then(historicalEvents => {
-        console.log(JSON.stringify(historicalEvents, null, 2));
         this.applyEntityEvents(historicalEvents, entity);
         const processCommandMethod = this.getProcessCommandMethod(entity, command.commandType);
-
         const events = processCommandMethod.call(entity, command);
-
         return this.eventstoreClient.update(entityName, events);
-      })
+      });
   }
   loadEvents(streamId) {
     return this.eventstoreClient.load(streamId);

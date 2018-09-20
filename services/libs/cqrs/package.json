@@ -5,6 +5,7 @@
   "directories": {
     "test": "test"
   },
+  "main": "index.js",
   "scripts": {
     "test": "mocha --reporter spec --ui bdd test/*"
   },

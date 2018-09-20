@@ -1,0 +1,14 @@
+{
+  "name": "route-builder",
+  "version": "2.0.2",
+  "description": "route-builder",
+  "main": "index.js",
+  "dependencies": {
+    "bluebird": "^2.10.0",
+    "hal": "file:../hal",
+    "is-uuid": "1.0.2"
+  },
+  "devDependencies": {
+    "express": "^4.13.3"
+  }
+}
