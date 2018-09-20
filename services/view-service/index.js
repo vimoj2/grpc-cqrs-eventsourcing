@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const fs = require('fs');
 const api = require('route-builder');
 const path = require('path');
 const express = require('express');
@@ -6,15 +7,27 @@ const bodyParser = require('body-parser');
 const Promise = require('bluebird');
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
-
-const {
-  AggregateRoot,
-  EventStoreClient
-} = require('cqrs');
+const { EventStoreClient, EventHandler } = require('cqrs');
+const config = require('./config');
 
 
 const RPC_SERVER = 'eventstore:28888';
 const PROTO_PATH = './proto/eventstore.proto';
+
+{
+  let readdirPromise = Promise.promisify(fs.readdir);
+  let statPromise = Promise.promisify(fs.lstat);
+  var filterByExt = extname => files => files.filter(fp => path.extname(fp) === extname);
+  var readdir = function (dir) {
+    return statPromise(dir)
+      .then((stat) => {
+        if (stat.isDirectory())
+          return readdirPromise(dir).then(files => Promise.all(files.map(file => readdir(path.join(dir, file)))));
+        return path.resolve(dir)
+      })
+      .then((raw) => Array.isArray(raw) ? _.flatten(raw) : [raw])
+  }
+}
 
 function * main() {
   const registry = Object.create(null);
@@ -27,8 +40,18 @@ function * main() {
   const zoover = grpc.loadPackageDefinition(packageDefinition).zoover;
   const grpcClient = new zoover.Eventstore(RPC_SERVER, grpc.credentials.createInsecure());
 
-  registry.AggregateRoot = AggregateRoot;
   registry.eventstoreClient = new EventStoreClient(grpcClient);
+
+  const projectionSettings = {
+    projection: config.projection
+  };
+
+  const projections = yield readdir(path.resolve(__dirname, './components/projections')).then(filterByExt('.js'));
+  registry.projection = new EventHandler(
+    projectionSettings,
+    projections.map(file => require(file)(registry)),
+    registry.eventstoreClient
+  );
 
   //build routes
   api(registry, './api').then((routes) => {

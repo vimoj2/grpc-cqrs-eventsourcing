@@ -13,6 +13,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bluebird": "3.5.2",
+    "async": "^2.6.1",
     "mocha": "5.2.0",
     "serializer": "file:../serializer"
   }

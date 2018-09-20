@@ -1,3 +1,4 @@
+const grpc = require('grpc');
 const { deserialize, serialize } = require('serializer');
 
 const formatEvents = (data, formatter) => data.events.map(event => {
@@ -43,6 +44,11 @@ class EventStoreClient {
   }
   close() {
     this.client.close();
+  }
+  subscribe(projection) {
+    const meta = new grpc.Metadata();
+    meta.add('client', `service-${new Date().getTime()}`);
+    return this.client.subscribe({ projection }, meta);
   }
 }
 

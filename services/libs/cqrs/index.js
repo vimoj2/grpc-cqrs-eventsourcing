@@ -1,4 +1,5 @@
 module.exports = {
   AggregateRoot: require('./AggregateRepository'),
-  EventStoreClient: require('./EventStoreClient')
+  EventStoreClient: require('./EventStoreClient'),
+  EventHandler: require('./EventHandler')
 };
