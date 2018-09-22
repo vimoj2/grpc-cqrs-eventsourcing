@@ -17,12 +17,16 @@ module.exports = (registry) => {
       });
 
       aggregateRoot
-        .createEntity({ EntityClass: registry.domain.User, command })
+        .createEntity({ 
+          EntityClass: registry.domain.User,
+          command
+        })
         .then(() => res.end());
     },
     update(req, res) {
       const data = req.body;
       data.uid = req.params.id;
+
       const command = {
         commandType: 'UpdateUser',
         commandData: data,
@@ -35,7 +39,10 @@ module.exports = (registry) => {
       });
 
       aggregateRoot
-        .updateEntity({ EntityClass: registry.domain.User, command })
+        .updateEntity({
+          EntityClass: registry.domain.User,
+          command
+        })
         .then(() => res.end());
     }
   }
