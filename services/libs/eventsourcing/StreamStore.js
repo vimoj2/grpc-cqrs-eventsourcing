@@ -9,6 +9,7 @@ class StreamStore {
     this.streams = {};
     this.subscribers = {};
     this.rootStream = null;
+    this.offset = 0;
     log('[Stream store initialized]')
   }
   getInfo() {
@@ -43,9 +44,18 @@ class StreamStore {
     }
     return this.streams[streamId];
   }
+  getOffsetId() {
+    return ++this.offset;
+  }
   getStreamEvents(streamId) {
+    const events = this.streams[streamId].events;
+    const filteredEvents = events.map(event => Object.assign({}, {
+      ...{eventType: event.eventType},
+      ...{eventBody: event.eventBody},
+      ...{eventTimestamp: event.eventTimestamp}
+    }));
     if (this.streams[streamId])
-      return { events: this.streams[streamId].events };
+      return { events: filteredEvents };
     else
       return { events: [] };
   }
@@ -53,6 +63,11 @@ class StreamStore {
     return this.streams[streamId];
   }
   write(streamId, events) {
+    events.forEach(event => {
+      event._metadata = {
+        offset: this.getOffsetId()
+      }
+    });
     const stream = this.registerStream(streamId);
     // log('Write...', JSON.stringify(events, null, 2));
     stream.write(events);
@@ -120,7 +135,7 @@ class StreamStore {
     }
     log(`[Subscriber ${subscriber} linked with projection ${projection}]`);
   }
-  createProjection(projection, subscriber) {
+  createProjection(projection, subscriber, options) {  
     const rootStream = this.intRootStream();
     this.subscribe(subscriber, projection);
 

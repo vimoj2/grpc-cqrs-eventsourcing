@@ -17,7 +17,7 @@ module.exports = (registry) => {
       });
 
       aggregateRoot
-        .createEntity({ 
+        .createEntity({
           EntityClass: registry.domain.User,
           command
         })

@@ -4,7 +4,7 @@ const { deserialize } = require('serializer');
 
 const log = console.log;
 const RPC_SERVER = 'localhost:28888';
-const PROTO_PATH = '../../proto/eventstore.proto';
+const PROTO_PATH = './proto/eventstore.proto';
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH);
 const zoover = grpc.loadPackageDefinition(packageDefinition).zoover;

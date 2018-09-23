@@ -29,7 +29,13 @@ function main(root) {
     call.on('cancelled', () => {
       streamStore.unsubscribe(subscriberId);
     });
-
+    
+    if (projection.fromBegging) {      
+      const loadHistoricalEvents = () => {
+        
+      }
+    }
+    
     streamStore
       .createProjection(projection, subscriberId)
       .onValue((events) => {
