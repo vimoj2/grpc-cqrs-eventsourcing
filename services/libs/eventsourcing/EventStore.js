@@ -3,12 +3,10 @@ const protoLoader = require('@grpc/proto-loader');
 const StreamStore = require('./StreamStore').StreamStore;
 const config = require('./config');
 
-const RPC_HOST = `${config.host}:${config.port}`;
-const PROTO_PATH = './proto/eventstore.proto';
-
-console.log(__dirname)
 
 const log = console.log;
+const RPC_HOST = `${config.host}:${config.port}`;
+const PROTO_PATH = './proto/eventstore.proto';
 
 function main(root) {
 

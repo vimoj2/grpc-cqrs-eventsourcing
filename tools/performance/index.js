@@ -17,20 +17,20 @@ const bytesToSize = (bytes) => {
    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
    return Math.round(bytes / Math.pow(1024, i), 2) + ' ' + sizes[i];
 };
-let nextId = 0;
-const getNextId = () => {
-   return ++nextId;
-}
+let offset = 0;
+const getOffsetId = () => {
+   return ++offset;
+};
 class Event extends EventEmitter {
 	constructor(idx) {
 		super();
-		this.eventType = eventTypes[(idx === 0 ? idx : 1)]
+		this.eventType = eventTypes[(idx === 0 ? idx : 1)];
 		this.eventBody = {
 			uid: uuid()
 		};
 		this.eventTimestamp = getNextTS();
 		this._metadata = {
-			nextId: getNextId()
+			offset: getOffsetId()
 		}
 	}
 }
@@ -46,7 +46,7 @@ const makeEventsFn = (size) => {
 			},
 			eventTimestamp: getNextTS(),
 			_metadata: {
-				nextId: getNextId()
+				offset: getOffsetId()
 			}
 		}
 	})
@@ -86,48 +86,48 @@ const reversSearch = (event = {}, events = []) => {
 	return position;
 };
 
-const historicalRead = (streams, projection) => {
+const historicalRead = (streams) => {
 	let streamPosition = 0;
 	let events = [];
 	const run = (streamPosition) => {
-		let hasAtLeastOne = false;
+		let needToCheckNextPosition = false;
 		for (let stream of streams) {
 			const event = stream[streamPosition];
 			if (event) {
-				hasAtLeastOne = true;
+				needToCheckNextPosition = true;
 				const position = reversSearch(event, events);
 				events.splice(position, 0, event);
 			}
 		}
-		if (hasAtLeastOne) {			
+		if (needToCheckNextPosition) {			
 			run(++streamPosition);
 		}
 	};
 	run(streamPosition);
 	return events;
 };
-//
-// // 1
-// console.log('Fn', bytesToSize(sizeof(makeClassStreams(streamNumber, eventsSize))));
-// console.log('Class', bytesToSize(sizeof(makeFnStreams(streamNumber, eventsSize))));
-//
-// console.time(`make fn ${streamNumber} streams with ${eventsSize} events`);
-// const fnstreams = makeFnStreams(streamNumber, eventsSize);
-// console.timeEnd(`make fn ${streamNumber} streams with ${eventsSize} events`);
-//
-// console.time('ordering events by timestamp');
-// const fnts = historicalRead(fnstreams).map(i => i.eventTimestamp);
-// console.timeEnd('ordering events by timestamp');
-//
-// console.time('check events order');
-// fnts.forEach((v, idx) => {
-// 	if (fnts[idx +1 ])
-// 		if (fnts[idx + 1] - v < 1) {
-// 			console.log(fnts[idx]);
-// 			console.log(fnts[idx + 1]);
-// 		}
-// });
-// console.timeEnd('check events order');
+
+// 1
+console.log('Fn', bytesToSize(sizeof(makeClassStreams(streamNumber, eventsSize))));
+console.log('Class', bytesToSize(sizeof(makeFnStreams(streamNumber, eventsSize))));
+
+console.time(`make fn ${streamNumber} streams with ${eventsSize} events`);
+const fnstreams = makeFnStreams(streamNumber, eventsSize);
+console.timeEnd(`make fn ${streamNumber} streams with ${eventsSize} events`);
+
+console.time('ordering events by timestamp');
+const fnts = historicalRead(fnstreams).map(i => i.eventTimestamp);
+console.timeEnd('ordering events by timestamp');
+
+console.time('check events order');
+fnts.forEach((v, idx) => {
+	if (fnts[idx +1 ])
+		if (fnts[idx + 1] - v < 1) {
+			console.log(fnts[idx]);
+			console.log(fnts[idx + 1]);
+		}
+});
+console.timeEnd('check events order');
 
 
 
