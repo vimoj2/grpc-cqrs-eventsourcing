@@ -3,6 +3,8 @@ const async = require('async');
 const Promise = require('bluebird');
 const { deserialize } = require('serializer');
 
+log = console.log;
+
 const formatEvents = (data, formatter) => data.events.map(event => {
   return {
     eventType: event.eventType,
@@ -21,9 +23,9 @@ class EventHandler {
       pipeStart: () => Promise.resolve(),
       pipeEnd: () => Promise.resolve(),
       catcher: (error) => {
-        console.log('Promise chain rejection. %s', error.message, { error });
+        log('Promise chain rejection. %s', error.message, { error });
         if (error instanceof Error)
-          console.log(error.stack);
+          log(error.stack);
         process.exit(-1);
       }
     };
@@ -47,21 +49,21 @@ class EventHandler {
         formatEvents(data, deserialize).forEach(event => this.queue.push(event));
       });
       subscription.on('error', (error) => {
-        console.log(error.stack);
+        log(error.stack);
         process.exit(-1);
       });
       subscription.on('end', (error) => {
-        console.log('Subscription was canceled');
+        log('Subscription was canceled');
         process.exit(0);
       });
     };
 
     const initialize = options.init || Promise.resolve;
     initialize()
-      .then(() => console.log('Projection initialization finished'))
+      .then(() => log('Projection initialization finished'))
       .then(setupSubscriber)
       .catch((err) => {
-        console.log(err);
+        log(err);
         process.exit(-1);
       });
 
@@ -69,7 +71,7 @@ class EventHandler {
       if (!(event.eventType in this.events))
         throw new Error(`Projection does not have handler to apply event "${event.eventType}"`);
 
-      console.log('Applying event "%s":', event.eventType, event);
+      log('Applying event "%s":', event.eventType, event);
 
       let handler = this.events[event.eventType].bind(this.execState);
       return Promise.resolve(event)
@@ -82,7 +84,7 @@ class EventHandler {
     }, options.concurrency);
   }
   initState() {
-    console.log('Initializing base state.');
+    log('Initializing base state.');
     if (this.options.stateful) {
       let state = this.state = {};
       this.execState = {
