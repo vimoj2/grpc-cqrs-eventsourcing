@@ -90,25 +90,27 @@ class HistoricalReader extends EventEmitter {
 
 function * main(root) {
   const subscribe = (call, callback) => {
-    const { projection } = call.request;
+    const { events, fromBegging } = call.request;
+    const projectionEvents = events;
     const subscriberId = call.metadata.getMap()['client'];
     log('[Subscribing]', subscriberId);
-    call.on('cancelled', () => {
-      streamStore.unsubscribe(subscriberId);
-    });
+    call.on('cancelled', () => { streamStore.unsubscribe(subscriberId) });
 
-    const historicalReader = new HistoricalReader(streamStore.streams);
-    historicalReader.on('data', events => {
-      call.write({ events })
-    });
-    historicalReader.on('done', () => {
-      collecting = false;
-    });
-
-    let collecting = true;
+    let collecting = false;
     let collection = [];
+    if (fromBegging) {
+      collecting = true;
+      const historicalReader = new HistoricalReader(streamStore.streams);
+      historicalReader.on('data', events => {
+        const filteredEvents = events.filter(event => projectionEvents.includes(event.eventType));
+        call.write({ events: filteredEvents })
+      });
+      historicalReader.on('done', () => { collecting = false });
+      historicalReader.read();
+    }
+
     streamStore
-      .createProjection(projection, subscriberId)
+      .createProjection(events.join(','), subscriberId)
       .onValue((events) => {
         if (collecting) {
           collection.push(events);
@@ -121,8 +123,6 @@ function * main(root) {
           }
         }
       });
-
-    historicalReader.read();
   };
 
   const setEvents = (call, callback) => {

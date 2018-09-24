@@ -1,3 +1,10 @@
 {
-  "projection": "UserCreated,UserUpdated"
+  "projection": "UserCreated,UserUpdated",
+  "new_projection_type": {
+    "events": [
+      "UserCreated",
+      "UserUpdated"
+    ],
+    "fromBegging": true
+  }
 }

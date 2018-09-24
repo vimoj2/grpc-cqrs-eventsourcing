@@ -33,7 +33,8 @@ message SetEventsResponse {
 }
 
 message SubsribeRequest {
-  string projection = 1;
+  repeated string events = 1;
+  bool fromBegging = 2;
 }
 
 message SubscribeResponse {

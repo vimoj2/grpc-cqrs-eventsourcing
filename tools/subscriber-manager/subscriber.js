@@ -17,7 +17,12 @@ meta.add('client', `service-${new Date().getTime()}`);
 function main() {
   const client = new zoover.Eventstore(RPC_SERVER, grpc.credentials.createInsecure());
 
-  const call = client.subscribe({ projection: eventTypes }, meta);
+  const subscriptionOptions = {
+    events: eventTypes.split(','),
+    fromBegging: true
+  };
+
+  const call = client.subscribe(subscriptionOptions, meta);
   call.on('error', function(e) {
     log(e);
     // An error has occurred and the stream has been closed.
