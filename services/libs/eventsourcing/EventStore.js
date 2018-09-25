@@ -1,6 +1,7 @@
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 const StreamStore = require('./StreamStore').StreamStore;
+const HistoricalReader = require('./HistoricalReader').HistoricalReader;
 const config = require('./config');
 
 
@@ -19,25 +20,41 @@ function main(root) {
     callback(null, streamStore.write(streamId, events));
   };
 
-  const subscribe = (call, callback) => {
-    const { projection } = call.request;
-    log('[Subscriber]', projection);
+  const subscribe = (call) => {
+    const { events, fromBegging } = call.request;
+    let collecting = false;
+    let collection = [];
 
+    const projectionEvents = events;
     const subscriberId = call.metadata.getMap()['client'];
-    call.on('cancelled', () => {
-      streamStore.unsubscribe(subscriberId);
-    });
-    
-    if (projection.fromBegging) {      
-      const loadHistoricalEvents = () => {
-        
-      }
+    log('[Subscribing]', subscriberId);
+    call.on('cancelled', () => { streamStore.unsubscribe(subscriberId) });
+
+
+    if (fromBegging) {
+      collecting = true;
+      const historicalReader = new HistoricalReader(streamStore.streams);
+      historicalReader.on('data', events => {
+        const filteredEvents = events.filter(event => projectionEvents.includes(event.eventType));
+        call.write({ events: filteredEvents })
+      });
+      historicalReader.on('done', () => { collecting = false });
+      historicalReader.read();
     }
-    
+
     streamStore
-      .createProjection(projection, subscriberId)
+      .createProjection(projectionEvents.join(','), subscriberId)
       .onValue((events) => {
-        call.write({ events });
+        if (collecting) {
+          collection.push(events);
+        } else {
+          if (collection.length !== 0) {
+            call.write({ events: collection });
+            collection = [];
+          } else {
+            call.write({ events });
+          }
+        }
       });
   };
 

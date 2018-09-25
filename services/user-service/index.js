@@ -36,7 +36,9 @@ function * main() {
   //build routes
   api(registry, './api').then((routes) => {
     routes = _.uniq(routes, segment => segment.route);
-    console.log('Bind %d api routes', routes.length, {routes: routes.map(segment => segment.route)});
+    console.log('Bind %d api routes', routes.length, {
+      routes: routes.map(segment => segment.route)
+    });
     registry.http = registry.app.listen(8081, () => {
       console.log(
         'User service started at %s %d',

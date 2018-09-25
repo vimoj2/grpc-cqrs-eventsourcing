@@ -48,7 +48,7 @@ class EventStoreClient {
   subscribe(projection) {
     const meta = new grpc.Metadata();
     meta.add('client', `service-${new Date().getTime()}`);
-    return this.client.subscribe({ projection }, meta);
+    return this.client.subscribe(projection, meta);
   }
 }
 

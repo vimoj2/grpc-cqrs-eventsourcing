@@ -17,7 +17,7 @@ meta.add('client', `service-${new Date().getTime()}`);
 function main() {
   const client = new zoover.Eventstore(RPC_SERVER, grpc.credentials.createInsecure());
 
-  const call = client.subscribe({ projection: eventTypes }, meta);
+  const call = client.subscribe({ events: eventTypes.split(','), fromBegging: false }, meta);
   call.on('data', (data) => {
     data.events.forEach((event) => {
       console.log('[Got]',

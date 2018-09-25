@@ -1,6 +1,5 @@
 {
-  "projection": "UserCreated,UserUpdated",
-  "new_projection_type": {
+  "projection": {
     "events": [
       "UserCreated",
       "UserUpdated"

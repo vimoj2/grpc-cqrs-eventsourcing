@@ -1,4 +1,4 @@
-module.exports = () => {
+module.exports = (tnx) => {
   const events = {
     ['UserCreated'](event) {
       if (this.state.users)

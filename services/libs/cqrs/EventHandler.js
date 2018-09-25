@@ -40,11 +40,15 @@ class EventHandler {
     const setupSubscriber = () => {
       if (
         !options.projection &&
-        typeof options.projection !== 'string'
+        !options.projection.events &&
+        typeof options.projection.events !== 'object'
       ) {
         return Promise.reject(new Error('Projection configuration is incorrect'));
       }
-      const subscription = eventstoreClient.subscribe(options.projection);
+      const eventTypes = options.projection.events;
+      const fromBegging = options.projection.fromBegging;
+
+      const subscription = eventstoreClient.subscribe({ events: eventTypes, fromBegging } );
       subscription.on('data', (data) => {
         formatEvents(data, deserialize).forEach(event => this.queue.push(event));
       });

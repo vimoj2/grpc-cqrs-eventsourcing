@@ -33,7 +33,8 @@ message SetEventsResponse {
 }
 
 message SubsribeRequest {
-  string projection = 1;
+  repeated string events = 1;
+  bool fromBegging = 2;
 }
 
 message SubscribeResponse {
@@ -45,6 +46,7 @@ message GetInfoRequest {
 }
 
 message GetInfoResponse {
-  int32 streams = 1;
-  repeated string subscribers = 2;
+  int32 streamsNumber = 1;
+  repeated string streamsNames = 2;
+  repeated string subscribers = 3;
 }
