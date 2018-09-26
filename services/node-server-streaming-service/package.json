@@ -11,7 +11,8 @@
     "google-proto-files": "^0.16.1",
     "grpc": "^1.14.1",
     "uuid": "3.3.2",
-    "serializer": "file:../libs/serializer"
+    "serializer": "file:../libs/serializer",
+    "eventstore-proto": "../libs/eventstore-proto"
   },
   "keywords": [],
   "author": "",

@@ -6,15 +6,12 @@ const bodyParser = require('body-parser');
 const Promise = require('bluebird');
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
-
-const {
-  AggregateRoot,
-  EventStoreClient
-} = require('cqrs');
+const protoPathResolver = require('eventstore-proto');
+const { AggregateRoot, EventStoreClient } = require('cqrs');
 
 
 const RPC_SERVER = 'eventstore:28888';
-const PROTO_PATH = './proto/eventstore.proto';
+const PROTO_PATH = protoPathResolver('eventstore.proto');
 
 function * main() {
   const registry = Object.create(null);

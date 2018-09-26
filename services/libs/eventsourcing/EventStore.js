@@ -2,12 +2,13 @@ const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
 const StreamStore = require('./StreamStore').StreamStore;
 const HistoricalReader = require('./HistoricalReader').HistoricalReader;
+const protoPathResolver = require('eventstore-proto');
 const config = require('./config');
 
 
 const log = console.log;
 const RPC_HOST = `${config.host}:${config.port}`;
-const PROTO_PATH = './proto/eventstore.proto';
+const PROTO_PATH = protoPathResolver('eventstore.proto');
 
 function main(root) {
 

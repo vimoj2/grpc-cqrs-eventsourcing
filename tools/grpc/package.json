@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "serializer": "file:../../services/libs/serializer"
+    "serializer": "file:../../services/libs/serializer",
+    "eventstore-proto": "file:../../services/libs/eventstore-proto"
   },
   "keywords": [],
   "author": "",

@@ -8,11 +8,17 @@ services:
     ports:
       - 28888:28888
     restart: always
-  unary:
-    build: services/node-unary-service
-    links:
-      - eventstore
-  server-stream:
-    build: services/node-server-streaming-service
+  user:
+    build: services/user-service
     links:
     - eventstore
+    ports:
+      - 8081:8081
+    restart: always
+  view:
+    build: services/view-service
+    links:
+    - eventstore:eventstore
+    ports:
+    - 8082:8082
+    restart: always

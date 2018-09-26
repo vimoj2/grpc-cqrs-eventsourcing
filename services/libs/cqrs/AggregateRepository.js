@@ -1,5 +1,3 @@
-const uuid = require('uuid');
-
 const log = console.log;
 
 class AggregateRepository {
@@ -72,50 +70,3 @@ class AggregateRepository {
 }
 
 module.exports = AggregateRepository;
-
-if (require.main === module) {
-  class User {
-    constructor() {
-      this.entityName = `user-${uuid()}`;
-    }
-    processCreateUser(command) {
-      //Business logic
-      //Validation
-      const events = [
-        {
-          eventType: 'UserCreated',
-          eventBody: {
-            ...command.commandData,
-            timestamp: command.commandTimestamp
-          }
-        }
-      ];
-      return events;
-    }
-  }
-
-  const eventstoreClient = {
-    create(streamId, events) {
-      console.log(streamId, JSON.stringify(events, null, 2))
-    },
-    update() {},
-    load() {},
-    subscribe() {}
-  };
-
-  const businessLogicTrigger = (data) => {
-    data.uid = uuid();
-
-    const command = {
-      commandType: 'CreateUser',
-      commandData: data,
-      commandTimestamp: new Date().getTime()
-    };
-
-    const aggregateRoot = new module.exports({ eventstoreClient, EntityClass: User });
-    aggregateRoot.createEntity({ EntityClass: User, command })
-  };
-
-  // Trigger business logic
-  businessLogicTrigger({ username: 'vimoj2' })
-}
