@@ -7,9 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "docker-compose -p cqrs-es build",
     "build:libs": "docker-compose -p cqrs-es build libs",
-    "build:eventstore": "docker-compose -p cqrs-es build eventstore",
-    "build:unary": "docker-compose -p cqrs-es build unary",
-    "build:server-stream": "docker-compose -p cqrs-es build server-stream",
     "start": "docker-compose -p cqrs-es up -d",
     "stop": "docker-compose -p cqrs-es stop",
     "logs": "docker-compose -p cqrs-es logs -f"

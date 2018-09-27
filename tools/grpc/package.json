@@ -1,16 +1,20 @@
 {
-  "name": "grpc",
+  "name": "grpc-tools",
   "version": "1.0.0",
-  "description": "",
   "main": "client.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "dependencies": {
-    "serializer": "file:../../services/libs/serializer",
-    "eventstore-proto": "file:../../services/libs/eventstore-proto"
+    "@grpc/proto-loader": "^0.3.0",
+    "eventstore-proto": "file:../../services/libs/eventstore-proto",
+    "express": "4.16.3",
+    "grpc": "1.15.1",
+    "serializer": "file:../../services/libs/serializer"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "description": ""
 }
