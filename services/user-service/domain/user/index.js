@@ -1,10 +1,7 @@
-const uuid = require('uuid');
-
-
 class User {
   constructor(uid) {
-    this.uid = (uid || uuid());
-    this.entityName = `user-${this.uid}`;
+    if (uid) this.uid = uid;
+    this.entityName = `user`;
   }
   processCreateUser(command) {
     return [
@@ -31,8 +28,8 @@ class User {
     ];
   }
   applyUserCreated(event) {
-    const { eventBody: { timestamp } } = event;
-    this.timestamp = timestamp;
+    const { eventBody: { uid, timestamp } } = event;
+    this.uid = uid;
     return this;
   }
   applyUserUpdated(event) {

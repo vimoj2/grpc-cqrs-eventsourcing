@@ -13,10 +13,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@grpc/proto-loader": "0.3.0",
     "async": "^2.6.1",
     "bluebird": "3.5.2",
+    "eventstore-proto": "file:../eventstore-proto",
     "grpc": "1.15.1",
     "mocha": "5.2.0",
-    "serializer": "file:../serializer"
+    "serializer": "file:../serializer",
+    "uuid": "3.3.2"
   }
 }

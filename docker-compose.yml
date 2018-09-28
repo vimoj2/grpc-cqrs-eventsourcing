@@ -1,3 +1,7 @@
+# to debug rpc calls
+# export GRPC_TRACE=all
+# export GRPC_VERBOSITY=DEBUG
+
 version: "2"
 
 services:

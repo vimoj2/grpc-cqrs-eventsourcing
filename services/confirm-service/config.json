@@ -1,0 +1,14 @@
+{
+  "service": {
+    "name": "confirm"
+  },
+  "http": {
+    "port": 8083
+  },
+  "projection": {
+    "events": [
+      "UserCreated"
+    ],
+    "fromBegging": false
+  }
+}

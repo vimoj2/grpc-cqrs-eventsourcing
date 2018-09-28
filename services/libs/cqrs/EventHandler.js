@@ -3,6 +3,7 @@ const async = require('async');
 const Promise = require('bluebird');
 const { deserialize } = require('serializer');
 
+
 log = console.log;
 
 const formatEvents = (data, formatter) => data.events.map(event => {
@@ -16,7 +17,7 @@ const formatEvents = (data, formatter) => data.events.map(event => {
 class EventHandler {
   constructor(options, projections, eventstoreClient) {
     options = options || {};
-
+    this.eventstoreClient = eventstoreClient;
     const defaultOptions = {
       restore: false,
       stateful: false,
@@ -48,7 +49,10 @@ class EventHandler {
       const eventTypes = options.projection.events;
       const fromBegging = options.projection.fromBegging;
 
-      const subscription = eventstoreClient.subscribe({ events: eventTypes, fromBegging } );
+      const projection = { events: eventTypes, fromBegging };
+
+      const subscription = this.eventstoreClient.subscribe(projection, options.metadata);
+
       subscription.on('data', (data) => {
         formatEvents(data, deserialize).forEach(event => this.queue.push(event));
       });

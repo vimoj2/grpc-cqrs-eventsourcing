@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "docker-compose -p cqrs-es build",
+    "build": "docker-compose -p cqrs-es build --no-cache",
     "build:libs": "docker-compose -p cqrs-es build libs",
     "start": "docker-compose -p cqrs-es up -d",
     "stop": "docker-compose -p cqrs-es stop",
@@ -21,5 +21,6 @@
   "bugs": {
     "url": "https://github.com/vimoj2/grpc-cqrs-eventsourcing/issues"
   },
-  "homepage": "https://github.com/vimoj2/grpc-cqrs-eventsourcing#readme"
+  "homepage": "https://github.com/vimoj2/grpc-cqrs-eventsourcing#readme",
+  "dependencies": {}
 }

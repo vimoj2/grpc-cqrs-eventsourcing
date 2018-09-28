@@ -1,4 +1,3 @@
-const grpc = require('grpc');
 const { deserialize, serialize } = require('serializer');
 
 const formatEvents = (data, formatter) => data.events.map(event => {
@@ -45,9 +44,7 @@ class EventStoreClient {
   close() {
     this.client.close();
   }
-  subscribe(projection) {
-    const meta = new grpc.Metadata();
-    meta.add('client', `service-${new Date().getTime()}`);
+  subscribe(projection, meta) {
     return this.client.subscribe(projection, meta);
   }
 }
@@ -55,5 +52,23 @@ class EventStoreClient {
 module.exports = EventStoreClient;
 
 if (module === require.main) {
-  module.exports();
+  const grpc = require('grpc');
+  const protoPathResolver = require('eventstore-proto');
+  const protoLoader = require('@grpc/proto-loader');
+  const protoPath = protoPathResolver('eventstore.proto');
+  const path = require('path');
+  const packageDefinition = protoLoader.loadSync(path.resolve(__dirname, protoPath));
+  const zoover = grpc.loadPackageDefinition(packageDefinition).zoover;
+  const RPC_SERVER = 'eventstore:28888';
+  const transportClient = new zoover.Eventstore(RPC_SERVER, grpc.credentials.createInsecure());
+
+
+  const eventstoreClient = new module.exports(transportClient);
+  const meta = new grpc.Metadata();
+
+  meta.add('client', `service-${new Date().getTime()}`);
+  eventstoreClient.subscribe({
+    events: ['UserCreated'],
+    fromBegging: false
+  }, meta)
 }

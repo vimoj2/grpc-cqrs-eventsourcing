@@ -18,15 +18,15 @@ const triggerCreateBusinessLogic = (data) => {
   return aggregateRoot.createEntity({ EntityClass: UserModel, command });
 };
 
-const triggerUpdateBusinessLogic = (data) => {
+const triggerUpdateBusinessLogic = (uid, data) => {
   const command = {
     commandType: 'UpdateUser',
     commandData: data,
     commandTimestamp: new Date().getTime()
   };
-  return aggregateRoot.updateEntity({ EntityClass: UserModel, command });
+  return aggregateRoot.updateEntity({ EntityClass: UserModel, uid, command });
 };
 
 // Trigger business logic
 triggerCreateBusinessLogic({ username: 'vimoj2' });
-triggerUpdateBusinessLogic({ uid: '1f94aca3-fa87-48d5-beb2-dd1234c34563', email: 'eugene@mail.com' });
+triggerUpdateBusinessLogic('1f94aca3-fa87-48d5-beb2-dd1234c34563', { email: 'eugene@mail.com' });

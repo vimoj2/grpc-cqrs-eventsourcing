@@ -1,3 +1,4 @@
+const uuid = require('uuid');
 const log = console.log;
 
 class AggregateRepository {
@@ -7,28 +8,26 @@ class AggregateRepository {
   }
   createEntity({ EntityClass, command }) {
     try {
-      const entity = new this.EntityClass();
+      const uid = uuid();
+      const entity = new this.EntityClass(uid);
       const processCommandMethod = this.getProcessCommandMethod(entity, command.commandType);
       const events = processCommandMethod.call(entity, command);
-      return this.eventstoreClient.create(entity.entityName, events);
+      return this.eventstoreClient.create(`${entity.entityName}-${uid}`, events);
 
     } catch (e) {
       log('[AggregateRepository#createEntity error]', e.stack);
     }
   }
-  updateEntity({ EntityClass, command}) {
-    if (!command.commandData.uid) {
-      throw new Error('No sense to go future');
-    }
-    const entity = new this.EntityClass(command.commandData.uid);
+  updateEntity({ EntityClass, uid, command}) {
+    const entity = new this.EntityClass();
     const { entityName } = entity;
 
-    return this.loadEvents(entityName)
+    return this.loadEvents(`${entityName}-${uid}`)
       .then(historicalEvents => {
         this.applyEntityEvents(historicalEvents, entity);
         const processCommandMethod = this.getProcessCommandMethod(entity, command.commandType);
         const events = processCommandMethod.call(entity, command);
-        return this.eventstoreClient.update(entityName, events);
+        return this.eventstoreClient.update(`${entityName}-${uid}`, events);
       });
   }
   loadEvents(streamId) {

@@ -1,1 +1,13 @@
-node_modules
+cqrs/node_modules
+eventsourcing/node_modules
+eventstore-proto/node_modules
+hal/node_modules
+route-builder/node_modules
+serializer/node_modules
+
+cqrs/package-lock.json
+eventsourcing/package-lock.json
+eventstore-proto/package-lock.json
+hal/package-lock.json
+route-builder/package-lock.json
+serializer/package-lock.json

@@ -1,5 +1,3 @@
-const uuid = require('uuid');
-
 module.exports = (registry) => {
   return {
     create(req, res) {
@@ -25,7 +23,7 @@ module.exports = (registry) => {
     },
     update(req, res) {
       const data = req.body;
-      data.uid = req.params.id;
+      const uid = req.params.id;
 
       const command = {
         commandType: 'UpdateUser',
@@ -41,6 +39,7 @@ module.exports = (registry) => {
       aggregateRoot
         .updateEntity({
           EntityClass: registry.domain.User,
+          uid,
           command
         })
         .then(() => res.end());
